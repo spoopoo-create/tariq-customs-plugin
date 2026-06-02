@@ -182,7 +182,7 @@ D — Réexportation en l'état .............. pas de D&T ; intrants non transfo
 E — Liquidation d'office (LO) ............ D&T intégraux + amende de délit — le PIRE scénario, dernier recours.
 F — Destruction sous contrôle ............ franchise D&T ; marchandises dégradées/périmées, PV de destruction.
 ```
-Plan d'assainissement (priorisation) : reliquat ≤ 15 % → MAC ; commandes export en cours → export + imputation ; intrants transférables → cession ; intrants intacts → réexportation ; marchandises détériorées → destruction ; sans solution → négocier une transaction avec l'ordonnateur **avant** la LO. Pour chaque compte, comparer le coût de A/B/F à celui de E et chiffrer l'économie.
+Plan d'assainissement (priorisation) : reliquat ≤ 15 % → MAC ; commandes export en attente → export + imputation ; intrants transférables → cession ; intrants intacts → réexportation ; marchandises détériorées → destruction ; sans solution → négocier une transaction avec l'ordonnateur **avant** la LO. Pour chaque compte, comparer le coût de A/B/F à celui de E et chiffrer l'économie.
 
 **Décision automatique sur le solde** :
 ```

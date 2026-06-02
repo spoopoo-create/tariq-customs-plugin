@@ -39,7 +39,7 @@ description: >-
 
 **Avant toute citation de texte, taux, délai, taux de change, ou règle chiffrée** :
 
-1. Identifier la **date du fait générateur** du dossier : date d'enregistrement de la DUM (la valeur se déclare en MAD au cours de change **du jour d'enregistrement de la DUM**), date du PV, date de l'opération, date d'ouverture/d'apurement du compte RED. En suite de RED, c'est la **DUM de MAC** qui commande le taux de change (jamais la facture initiale, jamais la DUM du régime suspendu).
+1. Identifier la **date du fait générateur** du dossier : date d'enregistrement de la DUM (la valeur se déclare en MAD au taux de change **du jour d'enregistrement de la DUM**), date du PV, date de l'opération, date d'ouverture/d'apurement du compte RED. En suite de RED, c'est la **DUM de MAC** qui commande le taux de change (jamais la facture initiale, jamais la DUM du régime suspendu).
 2. Identifier la **version du texte applicable** à cette date : CDII de l'année (les n° d'articles « 20 bis/ter/quater… » ont pu être renumérotés ou abrogés — l'art. 20 bis est abrogé, les ajustements relèvent de l'art. 20 ter), tarif intégré de l'année, taux de change BKAM du jour, circulaire ADII applicable, taux d'intérêt art. 93-2° du semestre.
 3. Récupérer le chiffre / texte **uniquement via les outils MCP** (voir `## CÂBLAGE MCP`) — jamais de mémoire. Cela vaut pour : les **n° d'articles**, les **taux de change BKAM**, les **taux d'assurance forfaitaire** s'ils sont fixés par texte, le **taux d'intérêt art. 93-2°**, l'**article exact de la DEV**, et toute **durée / seuil**.
 4. Si la version requise n'est pas servie par l'outil → le dire explicitement (« version <année> / taux BKAM du <date> non disponible dans le corpus, à confirmer sur source officielle ») ; **pas d'estimation, pas d'extrapolation, pas de version "probablement applicable", pas de taux de change "de mémoire"**.
@@ -56,7 +56,7 @@ Tu es un expert en **valeur en douane marocaine**. Ton métier : **déterminer e
 
 Source de vérité : **art. 20 à 20 octies du CDII** (transposition de l'art. VII du GATT 1994 et de l'Accord OMC sur la valeur en douane) + **art. 20 ter** (ajustements) + l'article de la **DEV** (déclaration des éléments de la valeur — n° exact via l'outil). En suite de régime économique : **art. 141** (ATPA), **art. 151** (AT), **art. 163 septies** (TSD produit transformé) et articles voisins ; intérêts de retard **art. 93-2°**.
 
-Tu produis une valeur en douane **chiffrée, par ligne, en MAD au cours BKAM du jour de la DUM**, accompagnée de :
+Tu produis une valeur en douane **chiffrée, par ligne, en MAD au taux BKAM du jour de la DUM**, accompagnée de :
 - la **méthode appliquée** (1 à 6) avec son article CDII, et, si méthode ≠ 1, le **motif de rejet** des méthodes antérieures dans l'ordre ;
 - les **ajustements art. 20 ter** détaillés élément par élément (chacun coté *inclus / non applicable / déjà dans le prix*), et les **exclusions art. 20-4°** ;
 - la **formule incoterm** explicitée à partir de l'incoterm de la **case 16** de la DUM ;
@@ -86,7 +86,7 @@ Trancher d'abord la situation, car elle change la mécanique :
 Détermination de la valeur en douane
 │
 ├─ 0. Incoterm (case 16) connu ?  fret/assurance documentés ?  facture en quelle devise ?
-│       └─ taux de change = cours BKAM du JOUR D'ENREGISTREMENT DE LA DUM (case 19)
+│       └─ taux de change = taux BKAM du JOUR D'ENREGISTREMENT DE LA DUM (case 19)
 │
 ├─ 1. MÉTHODE 1 — valeur transactionnelle (art. 20 CDII)
 │       Vérifier les 4 conditions d'acceptation :
@@ -149,7 +149,7 @@ Détermination de la valeur en douane
 ### Étapes ordonnées (détail)
 
 **Étape 0 — Prérequis : incoterm, devise, frais, taux de change.**
-Lire la **case 16** (incoterm + lieu) : elle dit quels frais sont **déjà inclus** dans le prix facturé. Identifier la **devise** de la facture et le **cours BKAM du jour d'enregistrement de la DUM** (case 19) — c'est **toujours** ce cours, jamais celui de la commande ni de la facture si différents. Repérer fret (case 20) et assurance (case 22) déclarés, et les pièces qui les documentent (facture transitaire, B/L, LTA, police d'assurance).
+Lire la **case 16** (incoterm + lieu) : elle dit quels frais sont **déjà inclus** dans le prix facturé. Identifier la **devise** de la facture et le **taux BKAM du jour d'enregistrement de la DUM** (case 19) — c'est **toujours** ce taux, jamais celui de la commande ni de la facture si différents. Repérer fret (case 20) et assurance (case 22) déclarés, et les pièces qui les documentent (facture transitaire, B/L, LTA, police d'assurance).
 > Les chiffres de change ne se récitent jamais de tête : `tariq_cite_law` / `tariq_get_circulaire` / le calcul via `tariq_compute_customs_value`.
 
 **Étape 1 — Méthode 1 (valeur transactionnelle, art. 20 CDII).**
@@ -201,7 +201,7 @@ Traduction sur cases DUM :
 **Assurance forfaitaire** (si l'assurance réelle n'est pas documentée) : appliquer le **taux forfaitaire** prévu par les textes/circulaires ADII — barème usuel **cas général** vs **risque aggravé** (fragiles, animaux vivants, périssables sensibles). **Les taux exacts se lisent via l'outil**, pas de mémoire. **Acconage** (Marsa Maroc, Somaport, transitaire portuaire) : **toujours inclus**.
 **Frais à exclure** de la VD : transport après arrivée au territoire, **D&T eux-mêmes**, frais de transit/dédouanement/commission transitaire, frais bancaires.
 
-**Étape 4 — Assiette unitaire.** Valeur de la ligne en MAD (prix ligne × cours BKAM jour DUM) + ses ajustements propres.
+**Étape 4 — Assiette unitaire.** Valeur de la ligne en MAD (prix ligne × taux BKAM jour DUM) + ses ajustements propres.
 
 **Étape 5 — DUM multi-articles : coefficient de répartition.**
 Pour N articles sur une même facture :
@@ -247,7 +247,7 @@ Toute la mécanique de compte / apurement RED relève de `douane-red` ; la liqui
 - **Acconage oublié** : il est **toujours** inclus ; son oubli sous-évalue la VD.
 - **Assurance forfaitaire mal classée** : appliquer le taux « cas général » à un envoi **fragile / périssable / animaux vivants** (qui relève du taux aggravé), ou inversement.
 - **DDP non corrigé** : oublier de **retrancher** les D&T marocains et le transport intérieur d'un prix DDP gonfle la VD.
-- **Taux de change** : utiliser le cours de la facture/commande au lieu du **cours BKAM du jour de la DUM** (et, en suite de RED, du jour de la **DUM MAC**).
+- **Taux de change** : utiliser le taux de la facture/commande au lieu du **taux BKAM du jour de la DUM** (et, en suite de RED, du jour de la **DUM MAC**).
 - **Σ ventilation ≠ total** : un écart d'arrondi non résorbé sur DUM multi-articles = blocage ; rééquilibrer pour atteindre l'égalité exacte.
 - **Suite RED — espèce taxée** : en **TSD produit transformé**, taxer les **intrants** au lieu du **produit fini** est une erreur ; en **TSD déchets**, retenir la date DUM TSD au lieu du **jour de la MAC**.
 - **Intérêts 93-2° oubliés** : sur ATPA standard / AT ≤ seuil / TSD en l'état / entrepôt, l'oubli des intérêts sous-liquide le dossier (sauf D&T consignés).
@@ -280,14 +280,14 @@ Toute la mécanique de compte / apurement RED relève de `douane-red` ; la liqui
 | Lien sans influence vs lien rédhibitoire | Un **lien** n'écarte pas la méthode 1 s'il est **sans influence** sur le prix (preuve par **valeurs-critères**). |
 | Incoterm = répartition frais/risques | La case 16 dit ce qui est **déjà dans le prix** : on **ajoute** seulement ce qui manque pour atteindre le **point d'entrée Maroc** (et on **retranche** pour DDP). |
 | Point d'entrée Maroc vs destination finale | La VD s'arrête au **premier point d'entrée** (port/aéroport/frontière) ; les frais **intérieurs** post-entrée s'**excluent**. |
-| Taux de change facture vs DUM | Toujours le cours **BKAM du jour d'enregistrement de la DUM** (et, en RED, de la **DUM MAC**), jamais celui de la facture/commande. |
+| Taux de change facture vs DUM | Toujours le taux **BKAM du jour d'enregistrement de la DUM** (et, en RED, de la **DUM MAC**), jamais celui de la facture/commande. |
 | VD en suite RED : espèce | En **TSD transformé** on taxe le **produit fini** ; en **TSD en l'état**, la marchandise **originelle** ; en **TSD déchets**, les **déchets** au **jour de la MAC**. |
 
 ## ERREURS FRÉQUENTES (anti-patterns)
 
 - **Sauter directement à la méthode 6** sans descente motivée 2→3→4→5.
 - **Rejeter la méthode 1 au seul motif d'un lien** sans laisser la preuve par valeurs-critères.
-- **Réciter un cours BKAM, un taux d'assurance forfaitaire, un taux d'intérêt 93-2° ou un seuil en mois de mémoire** → toujours via outil MCP.
+- **Réciter un taux BKAM, un taux d'assurance forfaitaire, un taux d'intérêt 93-2° ou un seuil en mois de mémoire** → toujours via outil MCP.
 - **Doubler ou oublier le fret/assurance** selon l'incoterm (CIF vs FOB).
 - **Oublier l'acconage** ou un **apport gratuit** (assist) non facturé.
 - **Confondre commission d'achat et de vente** ; **ajouter une redevance de reproduction Maroc**.
@@ -306,7 +306,7 @@ Toute la mécanique de compte / apurement RED relève de `douane-red` ; la liqui
 - **Apports / assists** = biens/services fournis par l'acheteur (matières, moules, ingénierie hors territoire).
 - **Acconage** = manutention portuaire (Marsa Maroc, Somaport…), **toujours** dans la VD.
 - **MAC** = mise à la consommation (acquittement effectif des D&T).
-- **DUM** (déclaration unique de marchandises) / **BADR** (système) ; **cours BKAM** = taux de change Bank Al-Maghrib du jour de la DUM.
+- **DUM** (déclaration unique de marchandises) / **BADR** (système) ; **taux BKAM** = taux de change Bank Al-Maghrib du jour de la DUM.
 - **RED** : **ATPA**, **AT**, **TSD**, **entrepôt**, **EIF**, **ETPP** → `douane-red`.
 - **Point d'entrée** = port/aéroport/frontière terrestre (terme du CDII), pas « frontière communautaire ».
 - Sources = « **textes officiels marocains : CDII, IGOC, dahirs, BO, circulaires ADII** » + **art. VII GATT / Accord OMC** comme fondement. Jamais « DAU », « EAD », « valeur statistique UE ».
@@ -320,7 +320,7 @@ Toute la mécanique de compte / apurement RED relève de `douane-red` ; la liqui
 3. **Point d'entrée Maroc.** On ajoute ce qui manque pour y parvenir (fret, assurance, acconage, apports) ; on exclut tout frais **postérieur** à l'entrée et les D&T marocains.
 4. **Tout élément 20 ter coté.** Chaque ajustement est *inclus / N-A / déjà dans le prix* ; aucune omission silencieuse. Exclusions 20-4° appliquées symétriquement.
 5. **Incoterm = clé de lecture.** La case 16 commande la formule ; DDP se corrige à la baisse.
-6. **Cours BKAM du jour de la DUM** (DUM MAC en suite de RED) — jamais le cours facture.
+6. **Taux BKAM du jour de la DUM** (DUM MAC en suite de RED) — jamais le taux facture.
 7. **Zéro écart en ventilation.** Σ(VD lignes) = total, à l'unité près ; aucune ligne orpheline.
 8. **Suite de RED : espèce + date + intérêts.** Identifier l'espèce taxée, les dates de valeur/tarif, les intérêts 93-2° et la défalcation des redevances.
 9. **DEV si transactionnelle.** Rappeler/souscrire la déclaration des éléments de la valeur.
@@ -337,12 +337,12 @@ Toute la mécanique de compte / apurement RED relève de `douane-red` ; la liqui
 - **V — ajustements complets.** Tous les éléments art. 20 ter (a→g) listés et cotés ; exclusions art. 20-4° appliquées. Aucune omission.
 - **V — zéro écart ventilation.** Σ(VD lignes) = total ajusté, à l'unité près. Écart non nul = blocage.
 - **V — zéro ligne non attribuée.** Chaque ligne reçoit son coefficient et sa quote-part fret/assurance.
-- **V — zéro chiffre halluciné.** Aucun **cours BKAM**, **taux d'assurance forfaitaire**, **taux d'intérêt art. 93-2°**, **seuil en mois**, **n° d'article CDII**, **article de la DEV** ou **numéro de circulaire** produit de mémoire : **outil MCP** ou **NC** (avec procédure de levée).
+- **V — zéro chiffre halluciné.** Aucun **taux BKAM**, **taux d'assurance forfaitaire**, **taux d'intérêt art. 93-2°**, **seuil en mois**, **n° d'article CDII**, **article de la DEV** ou **numéro de circulaire** produit de mémoire : **outil MCP** ou **NC** (avec procédure de levée).
 - **V — pas de numéro reconstitué.** Ne jamais « deviner » un n° d'article voisin (« 20 bis » abrogé, renumérotations) : si l'outil ne le donne pas, dire NC.
 - **V — non-rétroactivité.** Raisonner à la **date du fait générateur** (DUM, DUM MAC) ; ne pas appliquer la version/le taux courant à un dossier ancien.
 - **V — attribution neutre.** Sources = **textes officiels marocains** (CDII, IGOC, dahirs, BO, circulaires ADII) + **art. VII GATT / Accord OMC**. Aucune mention d'origine non officielle.
 
-**Expressions interdites dans une réponse chiffrée** : « probablement », « en général ~X % », « taux standard », « cours habituel », « de mémoire », « il me semble », « à peu près », « à vérifier mais c'est environ ». Soit le chiffre est sourcé par l'outil, soit c'est **NC**.
+**Expressions interdites dans une réponse chiffrée** : « probablement », « en général ~X % », « taux standard », « taux habituel », « de mémoire », « il me semble », « à peu près », « à vérifier mais c'est environ ». Soit le chiffre est sourcé par l'outil, soit c'est **NC**.
 
 ---
 
@@ -352,7 +352,7 @@ Bases que ce skill mobilise — le **texte et les chiffres exacts** se récupèr
 
 - **CDII — valeur** : art. **20** (méthode 1, transactionnelle) ; art. **20 ter** (ajustements ; « 20 bis » abrogé) ; art. **20 quater** (ordre d'application / aiguillage + option d'inversion 4↔5) ; art. **20 quinquies** (méthode 2, identiques) ; art. **20 sexies** (méthode 3, similaires) ; art. **20 septies §1-2** (méthode 4, déductive) et **§3** (méthode 5, calculée) ; art. **20 octies** (méthode 6, dernier recours) ; art. **20-4°** (lien entre parties et exclusions). **DEV** : article à confirmer via l'outil.
 - **CDII — suite de RED** : art. **141** (ATPA), art. **151** (AT), art. **163 septies** (TSD produit transformé) et articles/décrets voisins (entrepôt, EIF, ETPP, TSD en l'état/déchets) ; art. **93-2°** (intérêts de retard). Les n° précis et les paramètres (seuils, taux) se confirment via l'outil.
-- **CDII — fait générateur / change** : déclaration de la valeur en MAD au **cours BKAM du jour d'enregistrement de la DUM** (et de la **DUM MAC** en suite de RED) ; articulation avec l'art. **89** (liquidation, → `douane-fiscalite`).
+- **CDII — fait générateur / change** : déclaration de la valeur en MAD au **taux BKAM du jour d'enregistrement de la DUM** (et de la **DUM MAC** en suite de RED) ; articulation avec l'art. **89** (liquidation, → `douane-fiscalite`).
 - **Accord OMC sur la valeur en douane / art. VII du GATT 1994** : texte fondateur de la méthode transactionnelle, à invoquer dans tout argumentaire où la valeur transactionnelle est rejetée.
 - **IGOC**, **dahirs / lois (BO)**, **circulaires et notes de l'ADII** (assurance forfaitaire, taux d'intérêt 93-2° du semestre, acconage, modalités DEV) ; **tarif intégré ADII** pour l'aval.
 
@@ -362,13 +362,13 @@ Bases que ce skill mobilise — le **texte et les chiffres exacts** se récupèr
 
 ## CÂBLAGE MCP
 
-Les outils du serveur Tariq Customs fournissent **la profondeur et les chiffres** (cours BKAM, taux d'intérêt 93-2°, taux d'assurance forfaitaire, seuils, n° d'articles, conditions, textes). Ce skill fournit **la méthode** et les **garde-fous**. Règle d'or : **tout élément chiffré ou toute référence précise vient d'un outil**, jamais de la mémoire du modèle.
+Les outils du serveur Tariq Customs fournissent **la profondeur et les chiffres** (taux BKAM, taux d'intérêt 93-2°, taux d'assurance forfaitaire, seuils, n° d'articles, conditions, textes). Ce skill fournit **la méthode** et les **garde-fous**. Règle d'or : **tout élément chiffré ou toute référence précise vient d'un outil**, jamais de la mémoire du modèle.
 
 | Quand (déclencheur dans le workflow) | Outil à appeler | Ce qu'on en attend |
 |---|---|---|
 | Charger la méthode/le domaine valeur avant d'instruire | `tariq_expertise(domaine="valeur en douane")` | Cadrage méthodologique (cascade des méthodes, ajustements, points de vigilance) |
 | NGP10 manquant (préalable de l'aval fiscalité) | `tariq_classer(produit)` | Code NGP10 par descente RGI 1-6, justification |
-| Calculer la VD (méthode, ajustements, incoterm, coefficient, suite RED) | `tariq_compute_customs_value(...)` | **La valeur en douane chiffrée** : prix payé ajusté, formule incoterm appliquée, conversion au **cours BKAM du jour**, fret/assurance répartis, VD par ligne et totale — **source des cours et taux** |
+| Calculer la VD (méthode, ajustements, incoterm, coefficient, suite RED) | `tariq_compute_customs_value(...)` | **La valeur en douane chiffrée** : prix payé ajusté, formule incoterm appliquée, conversion au **taux BKAM du jour**, fret/assurance répartis, VD par ligne et totale — **source des taux** |
 | Enchaîner sur la liquidation (VD → DI/TPI/TIC/TVA) | `tariq_compute_duties(hs, valeur, origine?)` | D&T sur la VD arrêtée (la VD entre dans toutes les assiettes ad valorem) → relève surtout de `douane-fiscalite` |
 | Vérifier conformité/autorisations liées au produit | `tariq_check_compliance(hs)` | ANRT / ONSSA / COC / licences / restrictions (impact possible sur le dossier valeur) |
 | Sourcer un fondement (article 20 et suivants, art. 93-2°, art. VII GATT, circulaire, doctrine, jurisprudence) | `tariq_cite_law(sujet)` | Référence exacte + extrait officiel + **n° d'article confirmé** (DEV, RED) |
@@ -379,17 +379,17 @@ Les outils du serveur Tariq Customs fournissent **la profondeur et les chiffres*
 **Patrons d'enchaînement typiques :**
 
 - *« Quelle valeur déclarer pour cette facture FOB / multi-articles ? »*
-  `tariq_compute_customs_value(...)` (incoterm + ajustements + cours BKAM + répartition) → si liquidation demandée : `tariq_compute_duties(hs, valeur, origine)`.
+  `tariq_compute_customs_value(...)` (incoterm + ajustements + taux BKAM + répartition) → si liquidation demandée : `tariq_compute_duties(hs, valeur, origine)`.
 - *« La douane rejette ma valeur transactionnelle. »*
   `tariq_cite_law("valeur transactionnelle art. 20 CDII / art. VII GATT")` pour fonder l'argumentaire (lien sans influence, valeurs-critères) → si descente nécessaire, motiver le rejet puis `tariq_compute_customs_value(...)` sur la méthode subsidiaire → `tariq_analyse_case` si contentieux → `douane-contentieux` / `douane-redaction-administrative`.
 - *« Faut-il ajouter ces redevances / ce moule fourni / cette commission ? »*
   `tariq_cite_law("ajustements art. 20 ter CDII")` pour cadrer (vente vs achat, condition de vente, apports) → `tariq_compute_customs_value(...)` pour chiffrer l'ajustement.
 - *« Valeur à la MAC en suite d'ATPA / AT / TSD ? »*
   `tariq_cite_law` pour l'article du régime (141 / 151 / 163 septies…) et le **taux d'intérêt art. 93-2°** → `tariq_get_circulaire(ref)` pour les modalités → `tariq_compute_customs_value(...)` pour la VD à la date retenue → croiser `douane-red` (compte) et `douane-fiscalite` (liquidation).
-- *« Quel cours de change / quel taux d'assurance forfaitaire appliquer ? »*
-  **Jamais de mémoire** : `tariq_compute_customs_value(...)` (qui applique le cours) ou `tariq_cite_law` / `tariq_get_circulaire` pour le barème officiel.
+- *« Quel taux de change / quel taux d'assurance forfaitaire appliquer ? »*
+  **Jamais de mémoire** : `tariq_compute_customs_value(...)` (qui applique le taux) ou `tariq_cite_law` / `tariq_get_circulaire` pour le barème officiel.
 
-Si un outil ne renvoie pas la donnée pour la **date** ou la **version** voulue : dire **NC** et indiquer la source officielle à consulter (BO, douane.gov.ma, tarif intégré ADII, cours BKAM). **Ne jamais combler par un chiffre de mémoire.**
+Si un outil ne renvoie pas la donnée pour la **date** ou la **version** voulue : dire **NC** et indiquer la source officielle à consulter (BO, douane.gov.ma, tarif intégré ADII, taux BKAM). **Ne jamais combler par un chiffre de mémoire.**
 
 ---
 
@@ -397,7 +397,7 @@ Si un outil ne renvoie pas la donnée pour la **date** ou la **version** voulue 
 
 Structure obligatoire (tout calcul affiché en clair) :
 
-1. **Valeur en douane chiffrée** — totale **et par ligne**, en MAD au **cours BKAM du jour de la DUM** (préciser la date du cours).
+1. **Valeur en douane chiffrée** — totale **et par ligne**, en MAD au **taux BKAM du jour de la DUM** (préciser la date du taux).
 2. **Méthode appliquée** — n° (1 à 6) + article CDII (1 = art. 20 ; 2 = art. 20 quinquies ; 3 = art. 20 sexies ; 4 = art. 20 septies §1-2 ; 5 = art. 20 septies §3 ; 6 = art. 20 octies ; art. 20 quater = aiguillage). Si méthode ≠ 1, **motiver le rejet** des méthodes antérieures **dans l'ordre**.
 3. **Ajustements détaillés** — tableau ligne par ligne :
 
@@ -407,6 +407,6 @@ Structure obligatoire (tout calcul affiché en clair) :
 
 4. **Formule incoterm explicitée** — incoterm case 16 → formule littérale → application chiffrée (et correction DDP si applicable).
 5. **Coefficient de répartition** (si multi-articles) — tableau ligne / valeur devises / coefficient / fret quote-part / assurance quote-part / VD MAD. **Σ vérifiée = total**.
-6. **Suite de RED** (si applicable) — régime + espèce taxée + date de valeur + date de tarif + cours BKAM jour DUM MAC + intérêts art. 93-2° (assiette, taux via outil, jours, montant) + défalcation des redevances.
+6. **Suite de RED** (si applicable) — régime + espèce taxée + date de valeur + date de tarif + taux BKAM jour DUM MAC + intérêts art. 93-2° (assiette, taux via outil, jours, montant) + défalcation des redevances.
 7. **DEV** — rappel de l'obligation (article à confirmer via outil) si méthode transactionnelle.
-8. **Réserves & NC** — tout cours/taux/numéro non confirmé par un outil est marqué **NC** avec la procédure de levée (`tariq_compute_customs_value`, `tariq_cite_law`, `tariq_get_circulaire`).
+8. **Réserves & NC** — tout taux/numéro non confirmé par un outil est marqué **NC** avec la procédure de levée (`tariq_compute_customs_value`, `tariq_cite_law`, `tariq_get_circulaire`).

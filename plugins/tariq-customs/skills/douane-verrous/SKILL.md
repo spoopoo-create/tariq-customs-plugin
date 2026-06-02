@@ -168,7 +168,7 @@ Balayage final du texte. **Zéro occurrence tolérée** :
 
 - **« NC »** quand la source manque réellement — c'est l'opposé d'une hallucination.
 - **« sous réserve de… »** pour une condition juridique explicite (« sous réserve de
-  présentation de l'EUR.1 en cours de validité ») — c'est une condition, pas une hésitation.
+  présentation de l'EUR.1 en vigueur ») — c'est une condition, pas une hésitation.
 - **« à confirmer par décision anticipée art. 45 ter CDII »** — voie procédurale
   officielle, pas une dérobade.
 - **« la douane transige généralement par X % des D&T »** — **formulation imposée** pour

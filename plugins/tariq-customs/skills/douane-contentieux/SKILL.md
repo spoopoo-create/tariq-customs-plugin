@@ -163,7 +163,7 @@ La très grande majorité des affaires se **transigent**. C'est l'issue normale,
 > Les **valeurs numériques des délais** (nombre d'années) sont servies par `tariq_cite_law` / `tariq_get_cdii_article`. Ne pas écrire de durée non confirmée par l'outil.
 
 - **Interruption (القطع)** : un acte interruptif (PV, saisie, action judiciaire, demande à date certaine mettant le débiteur en demeure, notification de redressement…) **fait courir un nouveau délai entier** à compter de l'acte.
-- **Suspension (الوقف)** : force majeure ou procédure judiciaire en cours → le délai est **gelé** puis **reprend** là où il s'était arrêté (≠ interruption qui repart à zéro).
+- **Suspension (الوقف)** : force majeure ou procédure judiciaire en instance → le délai est **gelé** puis **reprend** là où il s'était arrêté (≠ interruption qui repart à zéro).
 
 **Pour l'avocat — calcul pas-à-pas** :
 1. Dater le fait générateur.
@@ -289,7 +289,7 @@ PRESCRIPTION :
   - Action douanière  : base art. 239 bis CDII — délai via MCP — départ : <date faits>
   - Recouvrement      : base art. 99 bis CDII — délai via MCP — départ : <date titre>
   - Actes interruptifs (datés, réguliers) : <PV / saisie / action judiciaire / notification redressement>
-  - Suspensions       : <force majeure / procédure en cours>
+  - Suspensions       : <force majeure / procédure en instance>
   - STATUT au <jour J> : <ACQUISE / non acquise — calcul pas-à-pas>
 
 RÉGULARITÉ DU PV :
