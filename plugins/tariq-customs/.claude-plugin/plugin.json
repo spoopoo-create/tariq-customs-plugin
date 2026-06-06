@@ -1,6 +1,6 @@
 {
   "name": "tariq-customs",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Tariq Customs — expertise douaniere Maroc (ADII / CDII). 14 skills methodologiques natifs : classement NGP10, valeur en douane, origine, regimes economiques (RED), contentieux, fiscalite, DUM/BADR, changes (Office des Changes), redaction administrative, verrous anti-hallucination. La profondeur (tarif, circulaires, decisions, calculs) vient du serveur MCP Tariq Customs (acces gated).",
   "author": { "name": "Tariq Customs" },
   "keywords": ["douane", "maroc", "adii", "cdii", "customs", "hs-code", "tarif"],
