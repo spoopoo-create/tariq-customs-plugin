@@ -6,7 +6,7 @@
       "name": "tariq-customs",
       "source": "./plugins/tariq-customs",
       "description": "Expertise douaniere Maroc (ADII/CDII) : 14 skills methodologiques natifs + connecteur MCP Tariq Customs (corpus gated).",
-      "version": "0.2.2"
+      "version": "0.3.0"
     }
   ]
 }
