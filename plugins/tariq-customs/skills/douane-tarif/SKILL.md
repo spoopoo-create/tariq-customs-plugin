@@ -35,11 +35,26 @@ Cette skill pilote les outils du serveur **Tariq Customs** pour lire le tarif (d
 - N'appeler un outil que si la réponse **en dépend** : pas d'appel « au cas où » (p. ex. ne pas lancer `tariq_compute_duties` quand on demande juste un DI).
 - Ne **pas re-fetch** un texte ou une désignation déjà obtenu dans la session ; le réutiliser.
 - Un **seul** `tariq_classer` suffit le plus souvent pour obtenir code + désignation + arbre + DI ; ne pas multiplier les appels sur le même nœud.
+- Lancer en parallèle (même tour) les appels indépendants ; la vitesse vient de la suppression du superflu, jamais d'un détail pertinent ou d'une source sacrifiés.
 
 ## Exhaustivité (à ne jamais rater)
 - **Version applicable d'abord** : déterminer la date du fait générateur (enregistrement de la DUM) → viser le **millésime du tarif en vigueur à cette date**, pas le tarif courant par réflexe. Si ce millésime n'est pas servi → le déclarer, ne pas extrapoler.
 - **Confirmer l'existence du code** avant d'affirmer un DI ; code absent → le dire, jamais substituer un code voisin en silence.
 - **Désignation cumulative** : restituer le fil complet (chapitre → position → sous-positions → NGP terminal), pas une ligne isolée.
+- **Arborescence = discriminants** : à chaque niveau, les sous-positions se distinguent par UN
+  discriminant (matière, teneur, usage, puissance, conditionnement…) ; pour DÉCIDER du code d'un
+  produit, appliquer la descente par discriminants (skill douane-classification) — jamais retenir
+  une ligne « au plus probable » sur un discriminant non établi.
 - **DI = brique, pas dette** : un DI lu n'est pas « le montant à payer ». Question sur le total → passer par `tariq_compute_duties`.
 - **Pas de préférentiel implicite** : le tarif affiche le DI plein ; toute réduction d'origine est conditionnée — la traiter via les outils dédiés, jamais par défaut.
 - **Conformité** : si le contexte est un import réel, vérifier les flags/contrôles via `tariq_check_compliance` avant de conclure.
+
+## Rendu client (mécanique invisible)
+- La réponse rendue ne mentionne jamais noms d'outils, « MCP », « serveur », « appel », « je consulte
+  ma base » ni déroulé technique ; aucune architecture interne (bases, tables, corpus, hébergement).
+- Parler en confrère expert : la désignation, le DI, leur source publique (NGP, tarif ADII
+  millésimé, circulaire n° X), point. Présenter le résultat, pas le chemin ; vocabulaire
+  anonymisé respecté.
+- Conclusion d'abord, détail sourcé ensuite ; zéro préambule, zéro méta. Fermeté : une donnée
+  tarifaire sourcée se maintient face à l'objection non étayée ; révision uniquement sur preuve
+  textuelle vérifiable, citée.

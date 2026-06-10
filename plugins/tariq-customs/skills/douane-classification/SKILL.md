@@ -37,6 +37,20 @@ Cette skill ne décide rien par elle-même : elle ordonne les appels.
 6. Livrable = pièce administrative (demande de décision anticipée, contestation d'un code notifié) ?
    → `tariq_draft_admin_letter(type)`. Sinon, rendre le résultat.
 
+## Descente par discriminants
+- AVANT tout appel : enrichir la caractérisation du produit — nature, matière/composition,
+  forme/état (brut, ouvré, assemblé…), fonction et usage, conditionnement, paramètres techniques,
+  fiche technique fournisseur — depuis les pièces fournies ET une recherche web ciblée si lacunaire.
+- La descente est une suite de discriminations : à chaque nœud parent, les enfants se distinguent
+  par UN discriminant (matière, teneur, procédé, usage, puissance, dimension, conditionnement…).
+  Identifier le discriminant du niveau, le confronter aux caractéristiques établies du produit,
+  choisir l'enfant qui correspond et EXCLURE les autres — répéter jusqu'à la feuille NGP10.
+- Discriminant non couvert par la caractérisation → SUSPENDRE la descente à ce niveau. Rechercher
+  d'abord l'information manquante (web : fiche technique, datasheet constructeur, norme produit) ;
+  introuvable ET décisive → poser à l'utilisateur UNE question précise en expliquant POURQUOI
+  (quel discriminant, entre quelles branches il départage). Ne JAMAIS deviner ni choisir « au
+  plus probable » sur un discriminant non établi.
+
 ## Efficience (tokens / latence)
 - Charger l'expertise une SEULE fois (étape 1) ; ne jamais la recharger dans la même tâche.
 - Dossier complet → préférer `tariq_analyse_case` (1 appel) plutôt que d'enchaîner classer +
@@ -47,6 +61,8 @@ Cette skill ne décide rien par elle-même : elle ordonne les appels.
   réutiliser le résultat en contexte.
 - Caractériser le produit à partir des pièces et du web AVANT d'appeler ; éviter les allers-retours
   d'outil pour des données déjà disponibles.
+- Lancer en parallèle les appels indépendants ; la vitesse vient de la suppression du superflu,
+  jamais d'un détail pertinent ou d'une source sacrifiés.
 
 ## Exhaustivité (ne jamais rater)
 - Étape 1 (`tariq_expertise`) faite avant tout raisonnement de classement.
@@ -64,3 +80,12 @@ Cette skill ne décide rien par elle-même : elle ordonne les appels.
 - Un produit physique = un seul code : trancher l'ambiguïté via les outils, jamais proposer deux
   codes au choix.
 - Conclure (code livré ou refus motivé) — pas d'arrêt à mi-parcours.
+
+## Rendu client (mécanique invisible)
+- La réponse rendue ne mentionne jamais noms d'outils, « MCP », « serveur », « appel », « je consulte
+  ma base » ni déroulé technique ; aucune architecture interne (bases, tables, corpus, hébergement).
+- Parler en confrère expert : le code, sa justification (RGI, note de section/chapitre, désignation
+  NGP, décision), point. Présenter le résultat, pas le chemin ; vocabulaire anonymisé respecté.
+- Conclusion d'abord, détail sourcé ensuite ; zéro préambule, zéro méta. Fermeté : un classement
+  sourcé se maintient face à l'objection non étayée ; révision uniquement sur preuve textuelle
+  vérifiable, en citant alors la nouvelle source.

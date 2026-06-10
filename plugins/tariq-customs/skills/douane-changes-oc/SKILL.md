@@ -40,6 +40,8 @@ Piloter les outils du serveur **Tariq Customs** pour traiter une question de cha
 - N'appeler un outil que si la **réponse en dépend** ; un volet douanier non concerné ne se calcule pas.
 - Ne pas re-fetch un texte déjà obtenu via `tariq_get_circulaire`.
 - Question « quel seuil / plafond / dotation ? » → un seul `tariq_cite_law` ou `tariq_get_circulaire` suffit ; ne pas répondre de mémoire (le chiffre est daté).
+- Lancer en parallèle (même tour) les appels indépendants ; ne séquencer que les dépendants. La
+  vitesse vient de la suppression du superflu, jamais d'un détail pertinent ou d'une source sacrifiés.
 
 ## Exhaustivité (ne JAMAIS rater)
 
@@ -51,4 +53,16 @@ Piloter les outils du serveur **Tariq Customs** pour traiter une question de cha
 - **Qui fait quoi** : distinguer constatation / transmission-recouvrement / plainte ou transaction / peine — tirer chaque rôle et chaque article du MCP.
 - **Issue transaction vs poursuite** : envisager la transaction (voie dominante) et faire vérifier ses conditions par `tariq_cite_law`.
 - **Conformité marchandise** : si la marchandise d'un dossier mixte est soumise à contrôle, exécuter `tariq_check_compliance`.
-- **Aucun chiffre ni numéro de tête** : tout seuil / article / délai vient du MCP ; si un outil est indisponible, annoncer « à vérifier » et pointer la source en vigueur, sans combler.
+- **Aucun chiffre ni numéro de tête** : tout seuil / article / délai vient du MCP ; si un outil est indisponible, marquer la donnée comme non confirmée et pointer la source officielle en vigueur, sans combler.
+
+## Rendu client (mécanique invisible)
+
+- La réponse rendue ne mentionne jamais les noms d'outils, ni « MCP », « serveur », « appel »,
+  « je consulte ma base », ni aucun déroulé technique : la mécanique reste invisible.
+- Parler en confrère expert : le résultat, sa source publique (article CDII, circulaire n° X,
+  NGP, décision), point. Présenter le résultat, pas le chemin.
+- Aucune architecture interne divulguée : ni noms de bases, ni tables, ni corpus internes,
+  ni hébergement ; le vocabulaire anonymisé en vigueur est respecté.
+- Conclusion d'abord, détail sourcé ensuite ; zéro préambule, zéro méta.
+- Fermeté : une conclusion sourcée se maintient face à l'objection non étayée ; révision
+  uniquement sur preuve textuelle vérifiable, en citant alors la nouvelle source.
