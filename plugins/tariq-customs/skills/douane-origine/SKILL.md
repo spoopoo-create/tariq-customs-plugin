@@ -13,61 +13,63 @@ description: >-
   certificate valid?", "is origin proven?", "can I cumulate?".
 ---
 
-# Skill : douane-origine
+# douane-origine — orchestration
 
 ## Role
-Pilot the Tariq Customs MCP server for origin questions. This skill only sequences
-tool calls; the substance (legal texts, agreements, list rules, rates, validity
-periods, jurisprudence) lives in the MCP — never restate it from memory.
+Pilote le serveur MCP Tariq Customs pour les questions d'origine. Cette skill ne fait
+qu'ordonner les appels ; la matière (textes, accords, règles de liste, taux, durées de
+validité, jurisprudence) vit dans le MCP — ne jamais la restituer de mémoire.
 
-## Sequence optimale (ordered MCP calls)
-1. `tariq_expertise("origine")` — call ONCE at the start of an origin matter. Loads the
-   method and the locks (date of the operative event, sourcing discipline). Do not re-call.
-2. Full dossier described (product + declared origin + agreement + documents, possibly
-   spanning value / economic regime / dispute)? → `tariq_analyse_case(description)` in ONE
-   call, then stop; only top up with a single targeted tool below if one answer is missing.
-3. Otherwise drive step by step, calling a tool only when the answer depends on it:
-   - Origin not sourced anywhere → origin = null, no preference. Stop (no further calls).
-   - Need the tariff position (the list rule depends on it) → `tariq_classer(product)`
-     BEFORE any origin rule.
-   - Origin criterion is value-based, or comparing upstream suspension vs preference →
+## Sequence optimale (appels ordonnés)
+1. `tariq_expertise("origine")` — UNE fois en ouverture d'un dossier origine. Charge la
+   méthode et les verrous (date du fait générateur, discipline de sourçage). Ne pas rappeler.
+2. Dossier complet décrit (produit + origine déclarée + accord + documents, débordant
+   éventuellement sur valeur / régime économique / litige) ? → `tariq_analyse_case(description)`
+   en UN appel, puis s'arrêter ; ne compléter qu'avec UN outil ciblé ci-dessous s'il manque
+   une réponse.
+3. Sinon avancer pas à pas, en n'appelant un outil que si la réponse en dépend :
+   - Origine non sourcée nulle part → origine = null, pas de préférence. Stop (aucun appel de plus).
+   - Position tarifaire requise (la règle de liste en dépend) → `tariq_classer(produit)`
+     AVANT toute règle d'origine.
+   - Critère d'origine en valeur, ou comparaison suspension amont vs préférence →
      `tariq_compute_customs_value(...)`.
-   - Need the rate (preferential if origin proven, else full) →
-     `tariq_compute_duties(hs, value, origin?)`.
-   - Non-preferential origin triggers a quota/trade-defence measure, or the product needs
-     regulatory checks → `tariq_check_compliance(hs)`.
-   - Need a rule / article / agreement / circular / decision, or any figure, date,
-     validity period, threshold → `tariq_cite_law(subject)`.
-   - Read one identified document in full → `tariq_get_circulaire(ref)`.
-   - Produce a piece (post-clearance verification request, contested preference refusal,
-     a-posteriori duplicate, approved-exporter letter) → `tariq_draft_admin_letter(type)`.
+   - Taux requis (préférentiel si origine prouvée, sinon plein) →
+     `tariq_compute_duties(hs, valeur, origine?)`.
+   - Origine non préférentielle déclenchant contingent/mesure de défense commerciale, ou
+     contrôles réglementaires du produit → `tariq_check_compliance(hs)`.
+   - Règle / article / accord / circulaire / décision, ou tout chiffre, date, durée de
+     validité, seuil → `tariq_cite_law(sujet)`.
+   - Lecture intégrale d'un document identifié → `tariq_get_circulaire(ref)`.
+   - Pièce à produire (demande de contrôle a posteriori, refus de préférence contesté,
+     duplicata a posteriori, lettre d'exportateur agréé) → `tariq_draft_admin_letter(type)`.
 
-## Efficience (fewer tokens / less latency)
-- Load `tariq_expertise("origine")` once per matter; never reload it.
-- For a complete dossier prefer ONE `tariq_analyse_case` over chaining many tools.
-- Call a tool only when an answer depends on it — never "just in case".
-- Never re-fetch a text already returned; reuse what `tariq_cite_law` /
-  `tariq_get_circulaire` already gave you.
-- Any figure / date / number / exact text → go to a tool; do not guess and then verify.
+## Efficience (tokens / latence)
+- Charger `tariq_expertise("origine")` une fois par dossier ; jamais le recharger.
+- Dossier complet → préférer UN `tariq_analyse_case` à l'enchaînement d'outils.
+- N'appeler un outil que si une réponse en dépend — jamais « au cas où ».
+- Ne jamais re-récupérer un texte déjà rendu ; réutiliser ce que `tariq_cite_law` /
+  `tariq_get_circulaire` ont déjà donné.
+- Tout chiffre / date / numéro / texte exact → passer par un outil ; ne pas deviner puis vérifier.
 - Lancer en parallèle (même tour) les appels indépendants ; la vitesse vient de la suppression
   du superflu, jamais d'un détail pertinent ou d'une source sacrifiés.
 
-## Exhaustivite (never skip, for origin)
-- Distinguish origin from provenance / billing / carrier; if origin is not sourced, return
-  null — never fall back to shipper/seller/loading country.
-- For a real import: confirm the preference trilogy — valid proof + origin criteria met +
-  direct transport. One missing link → full rate.
-- Fix the tariff position (`tariq_classer`) before applying any origin list rule.
-- Match the declared country to the applicable agreement and its required proof; obtain
-  every validity period / threshold / rate via tools, not memory.
-- If PEM applies, confirm which rule-set governs the operation (one set per operation).
-- Whenever an upstream suspensive economic regime is in play, resolve the no-drawback
-  question via the tools before concluding.
-- Judge as of the date of the operative event; if the applicable version is missing, say so
-  rather than extrapolate.
-- For preference granted/refused, surface the rate and its basis via `tariq_compute_duties`
-  + `tariq_cite_law`, and flag any red flag (expired proof, broken direct transport, a proof
-  used for the wrong purpose).
+## Exhaustivité (ne jamais sauter, pour l'origine)
+- Distinguer origine de provenance / facturation / transporteur ; origine non sourcée →
+  null — jamais de repli sur le pays de l'expéditeur/vendeur/chargement.
+- Import réel : confirmer la trilogie de la préférence — preuve valide + critères d'origine
+  remplis + transport direct. Un maillon manquant → taux plein.
+- Fixer la position tarifaire (`tariq_classer`) avant d'appliquer toute règle de liste.
+- Rapprocher le pays déclaré de l'accord applicable et de sa preuve requise ; obtenir
+  chaque durée de validité / seuil / taux via les outils, pas de mémoire.
+- Si le PEM s'applique, confirmer quel jeu de règles gouverne l'opération (un seul jeu par
+  opération).
+- Régime économique suspensif en amont → trancher la question du no-drawback via les outils
+  avant de conclure.
+- Juger à la date du fait générateur ; version applicable absente → le dire plutôt
+  qu'extrapoler.
+- Préférence accordée/refusée : faire ressortir le taux et son fondement via
+  `tariq_compute_duties` + `tariq_cite_law`, et signaler tout signal d'alerte (preuve expirée,
+  transport direct rompu, preuve utilisée hors de son objet).
 
 ## Rendu client (mécanique invisible)
 - La réponse rendue ne mentionne jamais les noms d'outils, ni « MCP », « serveur », « appel »,

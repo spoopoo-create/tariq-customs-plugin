@@ -7,38 +7,63 @@ description: >-
 # douane-red — orchestration
 
 ## Role
-Pilot the Tariq Customs MCP tools for Moroccan economic/suspensive customs regimes. This skill only sequences calls. All substance — regime rules, legal texts, deadlines, thresholds, formulas, rates, account methodology — lives in the MCP server. Never answer RED substance from memory; obtain it from a tool.
+Pilote les outils MCP Tariq Customs pour les régimes économiques/suspensifs marocains (RED).
+Cette skill ne fait qu'ordonner les appels. Toute la matière — règles des régimes, textes,
+délais, seuils, formules, taux, méthodologie des comptes — vit dans le serveur. Ne jamais
+répondre sur le fond RED de mémoire ; l'obtenir d'un outil.
 
-## Optimal sequence
-1. `tariq_expertise("red")` — call ONCE at the very start of a RED matter, before reasoning. It frames method and locks. Do not repeat it in the conversation.
-2. Full multi-aspect file (a sommier to clean up, chained regimes, RED + origin + duties, échu accounts to price) → `tariq_analyse_case(description)`. ONE call that orchestrates the dimensions; structure the answer from its output. Prefer this over manually chaining the tools below.
-3. Otherwise, call only what the answer depends on:
-   - HS/NGP code needed (input or compensating product) → `tariq_classer(product)`. Never derive a code yourself.
-   - Customs value for a MAC in suite of a regime → `tariq_compute_customs_value(...)`.
-   - Duties liquidation once value + reference date are fixed (e.g. pricing a régularisation option) → `tariq_compute_duties(hs, value, origin?)`.
-   - Compliance / licence status of a good (eligibility filter, prohibitions) → `tariq_check_compliance(hs)`.
-   - A precise article, deadline, threshold, circular ref, decision, or exact wording → `tariq_cite_law(subject)`.
-   - Full text of a referenced document → `tariq_get_circulaire(ref)`.
-   - Skeleton of an administrative piece (authorization/extension request, contesting a liquidation d'office) → `tariq_draft_admin_letter(type)`.
-4. Stop when the user's question is answered. If a tool returns nothing usable, say so plainly; do not invent.
+## Sequence optimale
+1. `tariq_expertise("red")` — UNE fois au tout début d'un dossier RED, avant de raisonner.
+   Cadre la méthode et les verrous. Ne pas répéter dans la conversation.
+2. Dossier complet multi-aspects (sommier à assainir, régimes chaînés, RED + origine + droits,
+   comptes échus à chiffrer) → `tariq_analyse_case(description)`. UN appel qui orchestre les
+   dimensions ; structurer la réponse depuis sa sortie. À préférer à l'enchaînement manuel des
+   outils ci-dessous.
+3. Sinon, n'appeler que ce dont la réponse dépend :
+   - Code SH/NGP requis (intrant ou produit compensateur) → `tariq_classer(produit)`. Ne jamais
+     dériver un code soi-même.
+   - Valeur en douane pour une MAC en suite de régime → `tariq_compute_customs_value(...)`.
+   - Liquidation des droits une fois valeur + date de référence fixées (ex. chiffrer une option
+     de régularisation) → `tariq_compute_duties(hs, valeur, origine?)`.
+   - Statut conformité / licence d'un bien (filtre d'éligibilité, prohibitions) →
+     `tariq_check_compliance(hs)`.
+   - Article précis, délai, seuil, référence de circulaire, décision, ou libellé exact →
+     `tariq_cite_law(sujet)`.
+   - Texte intégral d'un document référencé → `tariq_get_circulaire(ref)`.
+   - Squelette d'une pièce administrative (demande d'autorisation/prorogation, contestation
+     d'une liquidation d'office) → `tariq_draft_admin_letter(type)`.
+4. S'arrêter quand la question est répondue. Un outil ne rend rien d'utilisable → le dire
+   simplement ; ne pas inventer.
 
-## Efficiency (tokens / latency)
-- Load expertise exactly once. Re-reading it wastes the budget.
-- For a complete file, one `tariq_analyse_case` beats N separate calls — fewer round-trips, lower latency.
-- Call a tool only when the answer genuinely depends on its result. Never "just in case".
-- Do not re-fetch a text or code already returned earlier in the conversation; reuse it.
-- Batch independent calls (e.g. classify an input and check its compliance) in one turn rather than serially.
-- La vitesse vient de la suppression du superflu (préambule, redites, appels inutiles), jamais d'un détail pertinent ou d'une source sacrifiés.
+## Efficience (tokens / latence)
+- Charger l'expertise exactement une fois. La relire gaspille le budget.
+- Dossier complet : un `tariq_analyse_case` bat N appels séparés — moins d'allers-retours,
+  moins de latence.
+- N'appeler un outil que si la réponse dépend réellement de son résultat. Jamais « au cas où ».
+- Ne pas re-récupérer un texte ou un code déjà rendu plus tôt ; le réutiliser.
+- Grouper les appels indépendants (ex. classer un intrant et vérifier sa conformité) dans un
+  même tour plutôt qu'en série.
+- La vitesse vient de la suppression du superflu (préambule, redites, appels inutiles), jamais
+  d'un détail pertinent ou d'une source sacrifiés.
 
-## Exhaustiveness (never skip)
-- Open with `tariq_expertise("red")` before any RED reasoning.
-- Resolve the applicable regime before pricing anything — never jump to duties on an unqualified flow.
-- Anchor every cited rule, deadline, threshold, code, or circular to a tool result, not memory.
-- Date sensitivity: identify the file's operative date (opening DUM, apurement/MAC DUM, PV, invoice, origin proof) and obtain the version in force on that date via `tariq_cite_law` before citing.
-- A real import with later release → run `tariq_check_compliance` and surface any licence/prohibition constraint.
-- Account work (sommier, apurement, échu, reconstitution) → get the deadlines/thresholds/formula from the MCP; show the reference date for any MAC and give every remaining balance an explicit outcome.
-- Preferential origin or export under a trade agreement in play → obtain the no-drawback position and the agreement version via the tools; never settle it from memory.
-- For an échu account: price each régularisation option from `tariq_compute_duties` / `tariq_compute_customs_value` so the recommendation is grounded.
+## Exhaustivité (ne jamais sauter)
+- Ouvrir par `tariq_expertise("red")` avant tout raisonnement RED.
+- Résoudre le régime applicable avant de chiffrer quoi que ce soit — jamais de droits sur un
+  flux non qualifié.
+- Ancrer chaque règle, délai, seuil, code ou circulaire cités à un résultat d'outil, pas à la
+  mémoire.
+- Sensibilité aux dates : identifier la date de référence du dossier (DUM d'ouverture, DUM
+  d'apurement/MAC, PV, facture, preuve d'origine) et obtenir la version en vigueur à cette date
+  via `tariq_cite_law` avant de citer.
+- Import réel avec mise à la consommation ultérieure → passer `tariq_check_compliance` et faire
+  ressortir toute contrainte de licence/prohibition.
+- Travail de compte (sommier, apurement, échu, reconstitution) → obtenir délais/seuils/formule
+  du MCP ; afficher la date de référence de toute MAC et donner à chaque reliquat un sort
+  explicite.
+- Origine préférentielle ou export sous accord en jeu → obtenir la position no-drawback et la
+  version de l'accord via les outils ; ne jamais trancher de mémoire.
+- Compte échu : chiffrer chaque option de régularisation via `tariq_compute_duties` /
+  `tariq_compute_customs_value` pour ancrer la recommandation.
 
 ## Rendu client (mécanique invisible)
 - La réponse rendue ne mentionne jamais les noms d'outils, ni « MCP », « serveur », « appel »,

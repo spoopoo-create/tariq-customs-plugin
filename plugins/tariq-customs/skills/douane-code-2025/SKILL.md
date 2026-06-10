@@ -14,37 +14,58 @@ description: >-
 # douane-code-2025 — orchestration
 
 ## Role
-Pilot the Tariq Customs MCP tools to deliver the exact CDII article text in the correct version.
-All substance — verbatim text, article numbers/suffixes, dates, amendment detail, sourcing —
-comes from the MCP server. This skill only decides which tool to call, in what order, when to
-fetch, and when to stop.
+Pilote les outils du serveur MCP Tariq Customs pour livrer le texte exact d'un article du CDII
+dans la bonne version. Toute la matière — texte verbatim, numéros et suffixes d'articles, dates,
+détail des modifications, sourçage — vient du serveur. Cette skill décide seulement quel outil
+appeler, dans quel ordre, quand récupérer, et quand s'arrêter.
 
 ## Sequence optimale
-1. `tariq_expertise("code-2025")` — call ONCE at the start of the session to load method and locks. Do not repeat it.
-2. Establish the operative date first. If the user gives a document/event date, use it. If the article could have changed and no date is given, ask for the date before citing anything. If the user hands a full file, run `tariq_analyse_case(description)` ONCE to pin the operative event and surface the articles/versions in play.
-3. `tariq_cite_law(subject)` — primary reflex: retrieve the relevant article and its sourcing (text, suffix, repeal/amendment status, version label).
-4. Need the full verbatim text of a specific document/article/circular → `tariq_get_circulaire(ref)`. Skip if `tariq_cite_law` already returned the full text you need.
-5. Returned version matches the operative date → cite verbatim and stop. Server holds only the current version while the case is older and the article changed → do NOT substitute; go fetch the dated version from official sources and label its date/source.
-6. Repeal flagged → report it as the server gives it; if the case predates the repeal, return to step 2 for the version then in force. Amendment question → compare server-supplied current vs dated text only; the amendment detail comes from the matching circular via `tariq_get_circulaire`.
-7. Application to the case (calculation, qualification, drafting) is delegated, not done here: `tariq_compute_customs_value(...)`, `tariq_compute_duties(hs, valeur, origine?)`, `tariq_classer(produit)`, `tariq_check_compliance(hs)`, `tariq_draft_admin_letter(type)`. This skill only supplies the text those tasks cite.
+1. `tariq_expertise("code-2025")` — UNE fois en début de session pour charger méthode et verrous.
+   Ne pas répéter.
+2. Fixer d'abord la date du fait générateur. Si l'utilisateur donne une date de document ou
+   d'événement, l'utiliser. Si l'article a pu changer et qu'aucune date n'est donnée, demander la
+   date avant de citer quoi que ce soit. Dossier complet fourni → `tariq_analyse_case(description)`
+   UNE fois pour fixer le fait générateur et faire émerger les articles/versions en jeu.
+3. `tariq_cite_law(sujet)` — réflexe premier : récupérer l'article pertinent et son sourçage
+   (texte, suffixe, statut d'abrogation/modification, étiquette de version).
+4. Texte intégral verbatim d'un document/article/circulaire précis requis →
+   `tariq_get_circulaire(ref)`. Inutile si `tariq_cite_law` a déjà rendu le texte complet.
+5. La version renvoyée correspond à la date du fait générateur → citer verbatim et s'arrêter.
+   Le serveur ne porte que la version courante alors que le dossier est ancien et que l'article
+   a changé → ne PAS substituer ; aller chercher la version datée aux sources officielles et
+   étiqueter sa date/source.
+6. Abrogation signalée → la rapporter telle que le serveur la donne ; si le dossier est antérieur
+   à l'abrogation, revenir à l'étape 2 pour la version alors en vigueur. Question de modification
+   → comparer uniquement le texte courant et le texte daté fournis ; le détail de la modification
+   vient de la circulaire correspondante via `tariq_get_circulaire`.
+7. L'application au dossier (calcul, qualification, rédaction) est déléguée, pas faite ici :
+   `tariq_compute_customs_value(...)`, `tariq_compute_duties(hs, valeur, origine?)`,
+   `tariq_classer(produit)`, `tariq_check_compliance(hs)`, `tariq_draft_admin_letter(type)`.
+   Cette skill fournit seulement le texte que ces tâches citent.
 
 ## Efficience
-- Load `tariq_expertise("code-2025")` a SINGLE time per session; never reload it mid-thread.
-- For a complete file, prefer ONE `tariq_analyse_case` call over chaining many tools "to be safe".
-- Call a tool only when the answer depends on it — never speculatively. Pure-text questions need just `tariq_cite_law` (+ `tariq_get_circulaire` only if full verbatim is required).
-- Do not re-fetch text already returned in this session; reuse it.
-- Stop as soon as the cited version matches the operative date and the text is in hand.
+- Charger `tariq_expertise("code-2025")` UNE seule fois par session ; jamais en cours de fil.
+- Pour un dossier complet, préférer UN `tariq_analyse_case` à l'enchaînement d'outils « par prudence ».
+- N'appeler un outil que si la réponse en dépend — jamais spéculativement. Une question de pur
+  texte n'exige que `tariq_cite_law` (+ `tariq_get_circulaire` seulement si le verbatim intégral
+  est requis).
+- Ne pas re-récupérer un texte déjà rendu dans la session ; le réutiliser.
+- S'arrêter dès que la version citée correspond à la date du fait générateur et que le texte est en main.
 - Lancer en parallèle (même tour) les appels indépendants ; la vitesse vient de la suppression du
   superflu, jamais d'un détail pertinent ou d'une source sacrifiés.
 
-## Exhaustivité (never skip)
-- Pin the operative date BEFORE citing; the applicable version depends on it. Date unknown + article could have changed → ask, don't guess.
-- Confirm the exact article suffix (bis/ter/quater) as the server returns it; never round it off.
-- Check repeal/amendment status via the tool, not from memory.
-- Wanted version not in the server but required by the case → fetch the dated official version and label its source/date; never answer "probably unchanged".
-- If the user wants Arabic (مدونة الجمارك), request the Arabic text from the tool.
-- Resolve any cross-references the article makes by querying the tool for those texts too.
-- Any number, rate, delay, reference or verbatim passage = from the tool/official source only; if unconfirmed, say so and point to the source rather than inventing it.
+## Exhaustivité (ne jamais sauter)
+- Fixer la date du fait générateur AVANT de citer ; la version applicable en dépend. Date inconnue
+  + article susceptible d'avoir changé → demander, ne pas deviner.
+- Confirmer le suffixe exact de l'article (bis/ter/quater) tel que le serveur le renvoie ; ne
+  jamais l'arrondir.
+- Vérifier le statut d'abrogation/modification via l'outil, pas de mémoire.
+- Version voulue absente du serveur mais requise par le dossier → récupérer la version datée
+  officielle et étiqueter source/date ; ne jamais répondre « probablement inchangé ».
+- Texte en arabe demandé (مدونة الجمارك) → demander le texte arabe à l'outil.
+- Résoudre les renvois que fait l'article en interrogeant l'outil sur ces textes aussi.
+- Tout chiffre, taux, délai, référence ou passage verbatim = de l'outil/source officielle
+  uniquement ; non confirmé → le dire et pointer la source plutôt que d'inventer.
 
 ## Rendu client (mécanique invisible)
 - La réponse rendue ne mentionne jamais les noms d'outils, ni « MCP », « serveur », « appel »,
